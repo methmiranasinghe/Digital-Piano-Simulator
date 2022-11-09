@@ -1,5 +1,5 @@
 import numpy as np
-import pprint
+from scipy.io.wavfile import write
 import matplotlib.pyplot as plt
 sample_rate = 44100
 
@@ -19,5 +19,22 @@ def get_piano_notes():
     
     return  note_freqs
 
+def get_song_data(music_notes):
+    note_freqs =get_piano_notes()
+    song =[get_wave(note_freqs[note]) for note in music_notes.split('-')]
+    song =np.concatenate(song)
+    
+    return song
+    
 if __name__ == '__main__':
-    pprint.pprint(get_piano_notes())
+   music_notes ='C-C-G-G-A-A-G--F-F-E-E-D-D-C--G-G-F-F-E-E-D--G-G-F-F-E-E-D--C-C-G-G-A-A-G--F-F-E-E-D-D-C'
+   data = get_song_data(music_notes)
+   
+   data =data * (16300 /np.max(data))
+   
+   write('song.wav',sample_rate, data.astype(np.int16))
+   print('Song written successfulyy')
+   
+   
+   
+   
